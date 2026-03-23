@@ -1,0 +1,49 @@
+DisplayTypeName:Standard ES radar screen
+DisplayTypeNeedRadarContent:1
+DisplayTypeGeoReferenced:1
+SECTORFILE:F:\[VATSIM.net] Sector Files\[Developer-Release Candidates]\[2604] Bordeaux LFBB\LFBB-LFBB_20260321102031-260301-0003.sct
+SECTORTITLE:LFBB-LFBB_20260321102031-260301-0003.sct
+ARTCC boundary:LFBB Bordeaux UIR - Adjacent Sectors:
+ARTCC high boundary:LFBB Bordeaux UIR:
+ARTCC high boundary:LFBB Bordeaux UIR - Airways:
+ARTCC high boundary:LFBB Bordeaux UIR - Delegations:
+Fixes:AGOPA:symbol
+Fixes:ERIXU:symbol
+Fixes:FUZAP:symbol
+Fixes:GALOF:symbol
+Fixes:KEPER:symbol
+Fixes:KOTIS:symbol
+Fixes:NAPSU:symbol
+Fixes:NATPI:symbol
+Fixes:VAGNA:symbol
+Fixes:VANAD:symbol
+Regions:LFBB UIR - Delegations:polygon
+VORs:ANG:symbol
+VORs:BAN:symbol
+VORs:BMC:symbol
+VORs:BTZ:symbol
+VORs:CGC:symbol
+VORs:LTP:symbol
+VORs:MTL:symbol
+VORs:REN:symbol
+SHOWC:1
+SHOWSB:0
+BELOW:8000
+ABOVE:0
+LEADER:-2
+SHOWLEADER:0
+TURNLEADER:0
+HISTORY_DOTS:0
+SIMULATION_MODE:1
+DISABLEPANNING:0
+DISABLEZOOMING:0
+DisplayRotation:0.00000
+TAGFAMILY:CoFrance
+WINDOWAREA:41.665554:-8.120587:48.956966:12.018470
+PLUGIN:CoFrance:APP:0
+PLUGIN:CoFrance:FILT:1
+PLUGIN:CoFrance:FILTABOVE:99900
+PLUGIN:CoFrance:FILTBELOW:8000
+PLUGIN:CoFrance:RAD:1
+PLUGIN:CoFrance:VV:0
+PLUGIN:CoFrance:VVTIME:2
