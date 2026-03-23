@@ -1,8 +1,8 @@
 DisplayTypeName:Standard ES radar screen
 DisplayTypeNeedRadarContent:1
 DisplayTypeGeoReferenced:1
-SECTORFILE:F:\[VATSIM.net] Sector Files\[Developer-Release Candidates]\[2604] Bordeaux LFBB\LFBB-LFBB_20260321102031-260301-0003.sct
-SECTORTITLE:LFBB-LFBB_20260321102031-260301-0003.sct
+SECTORFILE:
+SECTORTITLE:
 ARTCC boundary:LFBB Bordeaux UIR - Adjacent Sectors:
 ARTCC high boundary:LFBB Bordeaux UIR:
 ARTCC high boundary:LFBB Bordeaux UIR - Airways:
