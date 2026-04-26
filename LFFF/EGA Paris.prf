@@ -1,0 +1,99 @@
+Plugins	Plugin0	\LFFF\Plugins\CoFrance\CoFranceLoader.dll
+Plugins	Plugin1	\LFFF\Plugins\RDF Plugin\RDFPlugin.dll
+Plugins	Plugin2	\LFFF\Plugins\CCAMS\CCAMS.dll
+Plugins	Plugin3	\LFFF\Plugins\VCH\VCH.dll
+Plugins	Plugin4	\LFFF\Plugins\vSMR\vSMR.dll
+Plugins	Plugin5	\LFFF\Plugins\ESTimers\ESTimers.dll
+Plugins	Plugin6	\LFFF\Plugins\vACDM\vACDM.dll
+Plugins	Plugin7	\LFFF\Plugins\RampAgent\RampAgent.dll
+Plugins	Plugin8	\LFFF\Plugins\EuroscopeRPC\EuroscopeRPC.dll
+Plugins	Plugin0Display0	CoFrance radar display
+Plugins	Plugin0Display1	Standard ES radar screen
+Plugins	Plugin0Display2	SMR radar display
+Plugins	Plugin1Display0	Standard ES radar screen
+Plugins	Plugin1Display1	SMR radar display
+Plugins	Plugin1Display2	CoFrance radar display
+Plugins	Plugin2Display0	SMR radar display
+Plugins	Plugin2Display1	Standard ES radar screen
+Plugins	Plugin3Display0	SMR radar display
+Plugins	Plugin3Display1	Standard ES radar screen
+Plugins	Plugin4Display0	SMR radar display
+Plugins	Plugin4Display1	Standard ES radar screen
+Plugins	Plugin5Display0	SMR radar display
+Plugins	Plugin5Display1	Standard ES radar screen
+ASRFastKeys	1	\LFFF\ASR\EGA Paris\EGA Paris - EL.asr
+ASRFastKeys	2	\LFFF\ASR\EGA Paris\EGA Paris - WL.asr
+ASRFastKeys	3	\LFFF\ASR\AVISOs\Paris Charles de Gaulle AVISO.asr
+ASRFastKeys	4	\LFFF\ASR\AVISOs\Paris-Orly AVISO.asr
+ASRFastKeys	5	\LFFF\ASR\AVISOs\Paris-Le Bourget AVISO.asr
+ASRFastKeys	6	\LFFF\ASR\AVISOs\Paris-Beauvais AVISO.asr
+ASRFastKeys	7	\LFFF\ASR\AVISOs\Paris-Saclay-Versailles AVISO.asr
+ASRFastKeys	8	\LFFF\ASR\AVISOs\Pontoise AVISO.asr
+RecentFiles	Recent1	\LFFF\ASR\EGA Paris\EGA Paris - EL.asr
+RecentFiles	Recent2	\LFFF\ASR\EGA Paris\EGA Paris - WL.asr
+RecentFiles	Recent3	\LFFF\ASR\AVISOs\Paris Charles de Gaulle AVISO.asr
+RecentFiles	Recent4	\LFFF\ASR\AVISOs\Paris-Orly AVISO.asr
+RecentFiles	Recent5	\LFFF\ASR\AVISOs\Paris-Le Bourget AVISO.asr
+RecentFiles	Recent6	\LFFF\ASR\AVISOs\Paris-Beauvais AVISO.asr
+RecentFiles	Recent7	\LFFF\ASR\AVISOs\Paris-Saclay-Versailles AVISO.asr
+RecentFiles	Recent8	\LFFF\ASR\AVISOs\Pontoise AVISO.asr
+Settings	AselKey	5111808
+Settings	FreqKey	3604480
+Settings	Settingsfile	\LFFF\Settings\General.txt
+Settings	SettingsfileADCS	\LFFF\Settings\Lists.txt
+Settings	SettingsfileARR	\LFFF\Settings\Lists.txt
+Settings	SettingsfileCONFLICT	\LFFF\Settings\Lists.txt
+Settings	SettingsfileDEP	\LFFF\Settings\Lists.txt
+Settings	SettingsfileFP	\LFFF\Settings\Lists.txt
+Settings	SettingsfileORIGPLANE	\LFFF\Settings\Lists.txt
+Settings	SettingsfilePILOTING	\LFFF\Settings\Lists.txt
+Settings	SettingsfilePLUGINS	\LFFF\Settings\Plugins.txt
+Settings	SettingsfilePROFILE	\LFFF\Settings\EGA Paris\ega_paris_profiles.txt
+Settings	SettingsfileSCREEN	\LFFF\Settings\Screen.txt
+Settings	SettingsfileSEL	\LFFF\Settings\Lists.txt
+Settings	SettingsfileSIL	\LFFF\Settings\Lists.txt
+Settings	SettingsfileSTUP	\LFFF\Settings\Lists.txt
+Settings	SettingsfileSYMBOLOGY	\LFFF\Settings\EGA Paris\ega_paris_symbology.txt
+Settings	SettingsfileTAGS	\LFFF\Settings\Tags.txt
+Settings	SettingsfileTAKEOFF	\LFFF\Settings\Lists.txt
+Settings	SettingsfileTAXIIN	\LFFF\Settings\Lists.txt
+Settings	SettingsfileTAXIOUT	\LFFF\Settings\Lists.txt
+Settings	SettingsfileVCCS	\LFFF\Settings\VCCS.txt
+Settings	SettingsfileVOICE	\LFFF\Settings\VoiceChannels.txt
+Settings	aircraft	\LFFF\ICAO\ICAO_Aircraft.txt
+Settings	airlines	\LFFF\ICAO\ICAO_Airlines.txt
+Settings	airportcoords	\LFFF\NavData\icao.txt
+Settings	airports	\LFFF\ICAO\ICAO_Airports.txt
+Settings	airways	\LFFF\NavData\airway.txt
+Settings	alias	\LFFF\Alias\alias.txt
+Settings	sector	\LFFF-Paris_20260420164556-260401-0001.sct
+Sounds	Sound0	\LFFF\Sounds\handoff_request.wav
+Sounds	Sound1	\LFFF\Sounds\handoff_accept.wav
+Sounds	Sound10	\LFFF\Sounds\disconnected.wav
+Sounds	Sound11	\LFFF\Sounds\ongoing_request.wav
+Sounds	Sound12	\LFFF\Sounds\ongoing_accepted.wav
+Sounds	Sound13	\LFFF\Sounds\ongoing_refused.wav
+Sounds	Sound14	\LFFF\Sounds\ongoing_manual.wav
+Sounds	Sound15	\LFFF\Sounds\new_atis.wav
+Sounds	Sound16	\LFFF\Sounds\handoff_refused.wav
+Sounds	Sound17	\LFFF\Sounds\pointout.wav
+Sounds	Sound18	\LFFF\Sounds\startup.wav
+Sounds	Sound2	\LFFF\Sounds\conflict_alert.wav
+Sounds	Sound3	\LFFF\Sounds\radio_message.wav
+Sounds	Sound4	\LFFF\Sounds\private_message.wav
+Sounds	Sound5	\LFFF\Sounds\atc_message.wav
+Sounds	Sound6	\LFFF\Sounds\broadcast_message.wav
+Sounds	Sound7	\LFFF\Sounds\landline_request.wav
+Sounds	Sound8	\LFFF\Sounds\supervisor_message.wav
+Sounds	Sound9	\LFFF\Sounds\connected.wav
+LastSession	connecttype	0
+LastSession	callsign	<INITIALS>_OBS
+LastSession	facility	0
+LastSession	rating	0
+LastSession	tovatsim	1
+LastSession	atis2	French vACC Observer
+LastSession	atis3	Welcome to France! -> vatsim.fr
+LastSession	range	275
+LastSession	proxyserver	localhost
+LastSession	simdatapublish	0
+LastSession	atis_freq4	118000
