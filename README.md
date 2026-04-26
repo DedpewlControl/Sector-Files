@@ -1,3 +1,5 @@
+<img width="1900" height="450" alt="vACCFR_GitHub_Sector-Files" src="https://github.com/user-attachments/assets/7640ecba-b0d8-44a8-92f7-c9901c296146" />
+
 # 🇫🇷 French vACC Sector File Repository
 
 Welcome to the official collaborative repository for the **French vACC Controller Packs**.
