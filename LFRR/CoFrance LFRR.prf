@@ -1,0 +1,101 @@
+Plugins	Plugin0	\LFRR\Plugins\CoFrance\CoFranceLoader.dll
+Plugins	Plugin1	\LFRR\Plugins\RDF Plugin\RDFPlugin.dll
+Plugins	Plugin2	\LFRR\Plugins\CCAMS\CCAMS.dll
+Plugins	Plugin3	\LFRR\Plugins\VCH\VCH.dll
+Plugins	Plugin4	\LFRR\Plugins\vSMR\vSMR.dll
+Plugins	Plugin5	\LFRR\Plugins\ESTimers\ESTimers.dll
+Plugins	Plugin6	\LFRR\Plugins\vACDM\vACDM.dll
+Plugins	Plugin7	\LFRR\Plugins\RampAgent\RampAgent.dll
+Plugins	Plugin8	\LFRR\Plugins\EuroscopeRPC\EuroscopeRPC.dll
+Plugins	Plugin0Display0	CoFrance radar display
+Plugins	Plugin0Display1	Standard ES radar screen
+Plugins	Plugin0Display2	SMR radar display
+Plugins	Plugin1Display0	Standard ES radar screen
+Plugins	Plugin1Display1	SMR radar display
+Plugins	Plugin1Display2	CoFrance radar display
+Plugins	Plugin2Display0	SMR radar display
+Plugins	Plugin2Display1	Standard ES radar screen
+Plugins	Plugin3Display0	SMR radar display
+Plugins	Plugin3Display1	Standard ES radar screen
+Plugins	Plugin4Display0	SMR radar display
+Plugins	Plugin4Display1	Standard ES radar screen
+Plugins	Plugin5Display0	SMR radar display
+Plugins	Plugin5Display1	Standard ES radar screen
+ASRFastKeys	1	\LFRR\ASR\Brest UIR.asr
+ASRFastKeys	2	\LFRR\ASR\Brest - Legacy APP.asr
+ASRFastKeys	3	\LFRR\ASR\AVISOs\Nantes AVISO.asr
+ASRFastKeys	4	\LFRR\ASR\AVISOs\Rennes AVISO.asr
+ASRFastKeys	5	\LFRR\ASR\AVISOs\Bretagne AVISO.asr
+ASRFastKeys	6	\LFRR\ASR\AVISOs\Saint Nazaire AVISO.asr
+ASRFastKeys	7	\LFRR\ASR\AVISOs\Dinard AVISO.asr
+ASRFastKeys	8	\LFRR\ASR\AVISOs\Caen AVISO.asr
+ASRFastKeys	9	\LFRR\ASR\AVISOs\Deauville AVISO.asr
+RecentFiles	Recent1	\LFRR\ASR\Brest UIR.asr
+RecentFiles	Recent2	\LFRR\ASR\Brest - Legacy APP.asr
+RecentFiles	Recent3	\LFRR\ASR\AVISOs\Nantes AVISO.asr
+RecentFiles	Recent4	\LFRR\ASR\AVISOs\Rennes AVISO.asr
+RecentFiles	Recent5	\LFRR\ASR\AVISOs\Bretagne AVISO.asr
+RecentFiles	Recent6	\LFRR\ASR\AVISOs\Saint Nazaire AVISO.asr
+RecentFiles	Recent7	\LFRR\ASR\AVISOs\Dinard AVISO.asr
+RecentFiles	Recent8	\LFRR\ASR\AVISOs\Caen AVISO.asr
+RecentFiles	Recent9	\LFRR\ASR\AVISOs\Deauville AVISO.asr
+Settings	AselKey	5111808
+Settings	FreqKey	3604480
+Settings	Settingsfile	\LFRR\Settings\General.txt
+Settings	SettingsfileADCS	\LFRR\Settings\Lists.txt
+Settings	SettingsfileARR	\LFRR\Settings\Lists.txt
+Settings	SettingsfileCONFLICT	\LFRR\Settings\Lists.txt
+Settings	SettingsfileDEP	\LFRR\Settings\Lists.txt
+Settings	SettingsfileFP	\LFRR\Settings\Lists.txt
+Settings	SettingsfileORIGPLANE	\LFRR\Settings\Lists.txt
+Settings	SettingsfilePILOTING	\LFRR\Settings\Lists.txt
+Settings	SettingsfilePLUGINS	\LFRR\Settings\Plugins.txt
+Settings	SettingsfilePROFILE	\LFRR\Settings\LoginProfiles.txt
+Settings	SettingsfileSCREEN	\LFRR\Settings\Screen.txt
+Settings	SettingsfileSEL	\LFRR\Settings\Lists.txt
+Settings	SettingsfileSIL	\LFRR\Settings\Lists.txt
+Settings	SettingsfileSTUP	\LFRR\Settings\Lists.txt
+Settings	SettingsfileSYMBOLOGY	\LFRR\Settings\Symbology.txt
+Settings	SettingsfileTAGS	\LFRR\Settings\Tags.txt
+Settings	SettingsfileTAKEOFF	\LFRR\Settings\Lists.txt
+Settings	SettingsfileTAXIIN	\LFRR\Settings\Lists.txt
+Settings	SettingsfileTAXIOUT	\LFRR\Settings\Lists.txt
+Settings	SettingsfileVCCS	\LFRR\Settings\VCCS.txt
+Settings	SettingsfileVOICE	\LFRR\Settings\VoiceChannels.txt
+Settings	aircraft	\LFRR\ICAO\ICAO_Aircraft.txt
+Settings	airlines	\LFRR\ICAO\ICAO_Airlines.txt
+Settings	airportcoords	\LFRR\NavData\icao.txt
+Settings	airports	\LFRR\ICAO\ICAO_Airports.txt
+Settings	airways	\LFRR\NavData\airway.txt
+Settings	alias	\LFRR\Alias\alias.txt
+Settings	sector	\LFRR-Brest_20260426110436-260401-0002.sct
+Sounds	Sound0	\LFRR\Sounds\handoff_request.wav
+Sounds	Sound1	\LFRR\Sounds\handoff_accept.wav
+Sounds	Sound10	\LFRR\Sounds\disconnected.wav
+Sounds	Sound11	\LFRR\Sounds\ongoing_request.wav
+Sounds	Sound12	\LFRR\Sounds\ongoing_accepted.wav
+Sounds	Sound13	\LFRR\Sounds\ongoing_refused.wav
+Sounds	Sound14	\LFRR\Sounds\ongoing_manual.wav
+Sounds	Sound15	\LFRR\Sounds\new_atis.wav
+Sounds	Sound16	\LFRR\Sounds\handoff_refused.wav
+Sounds	Sound17	\LFRR\Sounds\pointout.wav
+Sounds	Sound18	\LFRR\Sounds\startup.wav
+Sounds	Sound2	\LFRR\Sounds\conflict_alert.wav
+Sounds	Sound3	\LFRR\Sounds\radio_message.wav
+Sounds	Sound4	\LFRR\Sounds\private_message.wav
+Sounds	Sound5	\LFRR\Sounds\atc_message.wav
+Sounds	Sound6	\LFRR\Sounds\broadcast_message.wav
+Sounds	Sound7	\LFRR\Sounds\landline_request.wav
+Sounds	Sound8	\LFRR\Sounds\supervisor_message.wav
+Sounds	Sound9	\LFRR\Sounds\connected.wav
+LastSession	connecttype	0
+LastSession	callsign	<INITIALS>_OBS
+LastSession	facility	0
+LastSession	rating	0
+LastSession	tovatsim	1
+LastSession	atis2	French vACC Observer
+LastSession	atis3	Welcome to France! -> vatsim.fr
+LastSession	range	275
+LastSession	proxyserver	localhost
+LastSession	simdatapublish	0
+LastSession	atis_freq4	118000
