@@ -5,39 +5,39 @@ ATIS3:Welcome to France! -> vatsim.fr
 ATIS4:
 PROFILE:LFMM_A_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_EU_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_E_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_RAE_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_RAW_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_U_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_WU_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMM_W_CTR:300:6
 ATIS2:Marseille Control - EN/FR
-ATIS3:CPDLC Logon [LFXX] - First Contact via Voice!
+ATIS3:Sector Coverage - map.vatsim.net | CPDLC [LFXX]
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFKB_APP:120:5
 ATIS2:Bastia Approach - EN/FR
@@ -48,7 +48,7 @@ ATIS2:Ajaccio Approach - EN/FR
 ATIS3:Sector Coverage - map.vatsim.net
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLB_APP:120:5
-ATIS2:Chambéry Approach - EN/FR
+ATIS2:Chambery Approach - EN/FR
 ATIS3:Sector Coverage - map.vatsim.net
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLB_I_APP:120:5
@@ -79,10 +79,6 @@ PROFILE:LFLL_W_APP:120:5
 ATIS2:Lyon Approach - EN/FR
 ATIS3:Sector Coverage - map.vatsim.net
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
-PROFILE:LFMD_F_APP:120:5
-ATIS2:Mendelieu Director - EN/FR
-ATIS3:CALLSIGN ONLY ON FIRST CONTACT! TURN THEN RESPOND!
-ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFML_APP:120:5
 ATIS2:Provence Approach - EN/FR
 ATIS3:Sector Coverage - map.vatsim.net
@@ -103,6 +99,10 @@ PROFILE:LFMN_F_APP:120:5
 ATIS2:Nice Arrival - EN/FR
 ATIS3:CALLSIGN ONLY ON FIRST CONTACT! TURN THEN RESPOND!
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
+PROFILE:LFMN_MD_APP:120:5
+ATIS2:Nice Approach - EN/FR
+ATIS3:CALLSIGN ONLY ON FIRST CONTACT! TURN THEN RESPOND!
+ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMN_I_APP:120:5
 ATIS2:Nice Information - EN/FR
 ATIS3:Sector Coverage - map.vatsim.net
@@ -117,10 +117,6 @@ ATIS3:Sector Coverage - map.vatsim.net
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMT_S_APP:120:5
 ATIS2:Montpellier Approach - EN/FR
-ATIS3:Sector Coverage - map.vatsim.net
-ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
-PROFILE:LFTH_APP:120:5
-ATIS2:Toulon Approach - EN/FR
 ATIS3:Sector Coverage - map.vatsim.net
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFCR_TWR:30:4
@@ -144,7 +140,7 @@ ATIS2:Ajaccio Tower - EN/FR
 ATIS3:Check your charts! chartfox.org/LFKJ
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLB_TWR:30:4
-ATIS2:Chambéry Tower - EN/FR
+ATIS2:Chambery Tower - EN/FR
 ATIS3:Check your charts! chartfox.org/LFLB
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLC_TWR:30:4
@@ -156,7 +152,7 @@ ATIS2:Le Versoud Tower - EN/FR
 ATIS3:Check your charts! chartfox.org/LFLG
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLL_TWR:30:4
-ATIS2:Saint-Exupéry Tower - EN/FR
+ATIS2:Saint-Exupery Tower - EN/FR
 ATIS3:TOBT @ cdm.vatsim.fr | Charts chartfox.org/LFLL
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLP_TWR:30:4
@@ -187,10 +183,6 @@ PROFILE:LFMH_TWR:30:4
 ATIS2:Saint Etienne Tower - EN/FR
 ATIS3:Check your charts! chartfox.org/LFMH
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
-PROFILE:LFMI_TWR:30:4
-ATIS2:Le Tube Tower - EN/FR
-ATIS3:Check your charts! chartfox.org/LFMI
-ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFML_TWR:30:4
 ATIS2:Provence Tower - EN/FR
 ATIS3:TOBT @ cdm.vatsim.fr | Charts chartfox.org/LFML
@@ -198,10 +190,6 @@ ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMN_TWR:30:4
 ATIS2:Nice Tower - EN/FR
 ATIS3:TOBT @ cdm.vatsim.fr | Charts chartfox.org/LFMN
-ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
-PROFILE:LFMO_TWR:30:4
-ATIS2:Orange Tower - EN/FR
-ATIS3:Check your charts! chartfox.org/LFMO
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMP_TWR:30:4
 ATIS2:Perpignan Tower - EN/FR
@@ -218,10 +206,6 @@ ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFMV_TWR:30:4
 ATIS2:Avignon Tower - EN/FR
 ATIS3:Check your charts! chartfox.org/LFMV
-ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
-PROFILE:LFTH_TWR:30:4
-ATIS2:Hyeres Tower - EN/FR
-ATIS3:Check your charts! chartfox.org/LFTH
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFTW_TWR:30:4
 ATIS2:Garons Tower - EN/FR
@@ -256,7 +240,7 @@ ATIS2:Le Versoud Ground - EN/FR
 ATIS3:Check your charts! chartfox.org/LFLG
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLL_GND:10:3
-ATIS2:Saint Exupéry Ground - EN/FR
+ATIS2:Saint-Exupery Ground - EN/FR
 ATIS3:TOBT @ cdm.vatsim.fr | Charts chartfox.org/LFLL
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLS_GND:10:3
@@ -283,16 +267,12 @@ PROFILE:LFMT_GND:10:3
 ATIS2:Montpellier Ground - EN/FR
 ATIS3:Check your charts! chartfox.org/LFMT
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
-PROFILE:LFTH_GND:10:3
-ATIS2:Palyvestre Ground - EN/FR
-ATIS3:Check your charts! chartfox.org/LFTH
-ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFTW_GND:10:3
 ATIS2:Garons Ground - EN/FR
 ATIS3:Check your charts! chartfox.org/LFTW
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFLL_DEL:10:3
-ATIS2:Saint Exupéry Delivery - EN/FR
+ATIS2:Saint-Exupery Delivery - EN/FR
 ATIS3:TOBT @ cdm.vatsim.fr | Charts chartfox.org/LFLL
 ATIS4:Leave us some feedback! vatsim.fr/fb/VOTRE_CID_ICI
 PROFILE:LFML_DEL:10:3
