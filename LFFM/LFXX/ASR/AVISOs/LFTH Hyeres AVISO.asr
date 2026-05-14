@@ -1,0 +1,82 @@
+DisplayTypeName:SMR radar display
+DisplayTypeNeedRadarContent:0
+DisplayTypeGeoReferenced:1
+SECTORFILE:
+SECTORTITLE:
+Free Text:LFTH Gates\A1:freetext
+Free Text:LFTH Gates\A2:freetext
+Free Text:LFTH Gates\A3:freetext
+Free Text:LFTH Gates\A4:freetext
+Free Text:LFTH Gates\Aire transbordement Cargo:freetext
+Free Text:LFTH Gates\Escale Militaire:freetext
+Free Text:LFTH Gates\H1:freetext
+Free Text:LFTH Gates\H2:freetext
+Free Text:LFTH Gates\H3:freetext
+Free Text:LFTH Gates\H4:freetext
+Free Text:LFTH Gates\H5:freetext
+Free Text:LFTH Gates\H6:freetext
+Free Text:LFTH Gates\H7:freetext
+Free Text:LFTH Gates\HN:freetext
+Free Text:LFTH Gates\HS:freetext
+Free Text:LFTH Gates\P-Civ:freetext
+Free Text:LFTH Gates\P-Douanes-Gendarmerie:freetext
+Free Text:LFTH Gates\P-Mil:freetext
+Free Text:LFTH Gates\TWR:freetext
+Free Text:LFTH Gates\Terminal:freetext
+Free Text:LFTH Gates\VIP:freetext
+Free Text:LFTH Gates\X:freetext
+Free Text:LFTH Taxiways\A2:freetext
+Free Text:LFTH Taxiways\B2:freetext
+Free Text:LFTH Taxiways\C3:freetext
+Free Text:LFTH Taxiways\D3:freetext
+Free Text:LFTH Taxiways\E3:freetext
+Free Text:LFTH Taxiways\T1:freetext
+Free Text:LFTH Taxiways\T10:freetext
+Free Text:LFTH Taxiways\T2:freetext
+Free Text:LFTH Taxiways\T3:freetext
+Free Text:LFTH Taxiways\T4:freetext
+Free Text:LFTH Taxiways\T6:freetext
+Free Text:LFTH Taxiways\T8:freetext
+Geo:LFTH Groundlayout AVISO:
+Regions:LFTH AVISO:polygon
+SHOWC:1
+SHOWSB:0
+BELOW:0
+ABOVE:0
+LEADER:5
+SHOWLEADER:0
+TURNLEADER:0
+HISTORY_DOTS:0
+SIMULATION_MODE:4
+DISABLEPANNING:0
+DISABLEZOOMING:0
+DisplayRotation:0.00000
+TAGFAMILY:CoFrance
+WINDOWAREA:43.084850:6.113513:43.108820:6.181748
+PLUGIN:vSMR:ActiveProfile:Default
+PLUGIN:vSMR:Afterglow:1
+PLUGIN:vSMR:Airport:LFTH
+PLUGIN:vSMR:AppTrailsDots:4
+PLUGIN:vSMR:FontSize:1
+PLUGIN:vSMR:GndTrailsDots:4
+PLUGIN:vSMR:PredictedLine:0
+PLUGIN:vSMR:SRW1BottomRightX:418
+PLUGIN:vSMR:SRW1BottomRightY:1135
+PLUGIN:vSMR:SRW1Display:1
+PLUGIN:vSMR:SRW1Filter:5500
+PLUGIN:vSMR:SRW1OffsetX:8
+PLUGIN:vSMR:SRW1OffsetY:-8
+PLUGIN:vSMR:SRW1Rotation:0
+PLUGIN:vSMR:SRW1Scale:15
+PLUGIN:vSMR:SRW1TopLeftX:11
+PLUGIN:vSMR:SRW1TopLeftY:793
+PLUGIN:vSMR:SRW2BottomRightX:600
+PLUGIN:vSMR:SRW2BottomRightY:500
+PLUGIN:vSMR:SRW2Display:0
+PLUGIN:vSMR:SRW2Filter:5500
+PLUGIN:vSMR:SRW2OffsetX:0
+PLUGIN:vSMR:SRW2OffsetY:0
+PLUGIN:vSMR:SRW2Rotation:0
+PLUGIN:vSMR:SRW2Scale:15
+PLUGIN:vSMR:SRW2TopLeftX:200
+PLUGIN:vSMR:SRW2TopLeftY:200
