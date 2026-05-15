@@ -49,7 +49,7 @@ GNG_ONLY_FILES = [
     "LFRR/Settings/VoiceChannels.txt",
 ]
 
-GITHUB_OWNER = "DedpewlControl"
+GITHUB_OWNER = "vaccfr"
 GITHUB_REPO = "Sector-Files"
 GITHUB_BRANCH = "main"
 
