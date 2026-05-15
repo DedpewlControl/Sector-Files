@@ -6,6 +6,7 @@ REPO_LAYOUT_MAP = {
     "LFFF": "LFFF",
     "LFMM": "LFMM",
     "LFRR": "LFRR",
+    "LFFM": "LFFM",
     "LFXX": "LFXX",
 }
 
@@ -18,3 +19,8 @@ GNG_ONLY_FILES = [
     "*/Settings/LoginProfiles.txt",
     "*/Settings/VoiceChannels.txt",
 ]
+
+# GitHub repo settings
+GITHUB_OWNER = "DedpewlControl"
+GITHUB_REPO = "Sector-Files"
+GITHUB_BRANCH = "main"
