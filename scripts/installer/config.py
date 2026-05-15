@@ -18,6 +18,8 @@ GNG_ONLY_FILES = [
     "LFXX/Sectors/Backup_AIRAC_*/*",
 
     "LFXX/Alias/*",
+    "LFXX/ICAO/*",
+    "LFXX/NavData/*",
     "LFXX/Settings_Backups/*",
     "LFXX/Settings_Backups/*/*",
 
