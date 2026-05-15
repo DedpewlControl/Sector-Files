@@ -5,28 +5,17 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 
-APP_NAME = "CoFrance Profile Configurator"
+APP_NAME = "Profile Configurator"
 GREEN = "#2d7d46"
 AMBER = "#d08b00"
 GRAY = "#777777"
 
-RPC_PATH = r"\\..\\LFXX\\Plugins\\EuroscopeRPC\\EuroscopeRPC.dll"
+RPC_PATH = r"\..\LFXX\Plugins\EuroscopeRPC\EuroscopeRPC.dll"
 
 RATINGS = [
-    "OBS",
-    "S1",
-    "S2",
-    "S3",
-    "C1",
-    "C2",
-    "C3",
-    "I1",
-    "I2",
-    "I3",
-    "SUP",
-    "ADM",
+    "OBS", "S1", "S2", "S3", "C1", "C2",
+    "C3", "I1", "I2", "I3", "SUP", "ADM",
 ]
-
 
 try:
     from build_info import BUILD_COMMIT, BUILD_BRANCH
@@ -35,19 +24,16 @@ except Exception:
     BUILD_BRANCH = "local"
 
 
-
 def resource_path(relative_path: str) -> Path:
     if getattr(sys, "frozen", False):
         return Path(sys._MEIPASS) / relative_path
     return Path(__file__).resolve().parent / relative_path
 
 
-
 def get_start_directory() -> Path:
     if getattr(sys, "frozen", False):
         return Path(sys.executable).resolve().parent
     return Path.cwd()
-
 
 
 def looks_like_controller_pack(path: Path) -> bool:
@@ -57,20 +43,15 @@ def looks_like_controller_pack(path: Path) -> bool:
     )
 
 
-
 def find_prf_files(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.prf") if path.is_file())
 
 
-
 def rating_to_euroscope_value(rating: str) -> str:
-    rating = rating.strip().upper()
-
     try:
-        return str(RATINGS.index(rating))
+        return str(RATINGS.index(rating.strip().upper()))
     except ValueError:
         return "1"
-
 
 
 def is_euroscope_rpc_line(line: str) -> bool:
@@ -80,9 +61,7 @@ def is_euroscope_rpc_line(line: str) -> bool:
         return False
 
     normalized = stripped.replace("/", "\\").lower()
-
     return "lfxx\\plugins\\euroscoperpc\\euroscoperpc.dll" in normalized
-
 
 
 def ensure_rpc_plugin(lines: list[str]) -> list[str]:
@@ -99,12 +78,11 @@ def ensure_rpc_plugin(lines: list[str]) -> list[str]:
 
     next_plugin = max(plugin_numbers, default=0) + 1
 
-    lines.append(
-        f"Plugins\tPlugin{next_plugin}\t{RPC_PATH}\n"
-    )
+    if lines and not lines[-1].endswith(("\n", "\r")):
+        lines[-1] += "\n"
 
+    lines.append(f"Plugins\tPlugin{next_plugin}\t{RPC_PATH}\n")
     return lines
-
 
 
 def patch_prf_file(path: Path, details: dict) -> bool:
@@ -150,6 +128,9 @@ def patch_prf_file(path: Path, details: dict) -> bool:
 
         output.append(line)
 
+    if output and not output[-1].endswith(("\n", "\r")):
+        output[-1] += "\n"
+
     if not found_realname:
         output.append(f"LastSession\trealname\t{details['name']}\n")
 
@@ -171,9 +152,7 @@ def patch_prf_file(path: Path, details: dict) -> bool:
         return False
 
     path.write_text(updated, encoding="utf-8", newline="")
-
     return True
-
 
 
 class ProfileConfiguratorApp:
@@ -207,7 +186,7 @@ class ProfileConfiguratorApp:
         tk.Label(
             root,
             text=(
-                "Update EuroScope login details and Discord Rich Presence settings "
+                "Update EuroScope login details and EuroScopeRPC settings "
                 "for all PRF files in your controller pack."
             ),
             wraplength=660,
@@ -240,7 +219,6 @@ class ProfileConfiguratorApp:
         ttk.Entry(form, textvariable=self.password_var, show="*", width=40).grid(row=2, column=1, sticky="ew")
 
         ttk.Label(form, text="Controller Rating").grid(row=3, column=0, sticky="w", pady=6)
-
         ttk.Combobox(
             form,
             values=RATINGS,
@@ -271,7 +249,6 @@ class ProfileConfiguratorApp:
             bg=GREEN,
             fg="white",
         )
-
         self.action_button.pack(fill="x", padx=40, pady=18)
 
         tk.Label(
@@ -322,9 +299,7 @@ class ProfileConfiguratorApp:
         self.prf_count_text.set(f"Profiles detected: {count}")
 
     def select_controller_pack_directory(self):
-        folder = filedialog.askdirectory(
-            title="Select controller pack directory"
-        )
+        folder = filedialog.askdirectory(title="Select controller pack directory")
 
         if folder:
             self.controller_pack_dir.set(folder)

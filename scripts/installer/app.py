@@ -62,7 +62,7 @@ class InstallerApp:
 
         tk.Label(
             root,
-            text="CoFrance Controller Pack Installer",
+            text="Controller Pack Installer",
             font=("Segoe UI", 16, "bold"),
         ).pack(pady=14)
 

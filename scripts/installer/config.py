@@ -44,5 +44,5 @@ GITHUB_OWNER = "DedpewlControl"
 GITHUB_REPO = "Sector-Files"
 GITHUB_BRANCH = "main"
 
-APP_NAME = "CoFrance Installer"
+APP_NAME = "Controller Pack Installer"
 VERSION_FILE = ".github/installer-version.txt"
