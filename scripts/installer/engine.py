@@ -1,35 +1,82 @@
 from pathlib import Path
-import shutil
-import zipfile
-import tempfile
 import fnmatch
-import py7zr
+import shutil
+import tempfile
+import zipfile
 
-from config import REPO_LAYOUT_MAP, GNG_ONLY_FILES, FIRS
+import py7zr
+import requests
+
+from config import (
+    FIRS,
+    REPO_LAYOUT_MAP,
+    GNG_ONLY_FILES,
+    GITHUB_OWNER,
+    GITHUB_REPO,
+    GITHUB_BRANCH,
+)
 
 
 def matches(path: Path, patterns: list[str]) -> bool:
-    s = path.as_posix()
-    return any(fnmatch.fnmatch(s, p) for p in patterns)
+    normalized = path.as_posix()
+    return any(fnmatch.fnmatch(normalized, pattern) for pattern in patterns)
 
 
-def extract_archive(archive: Path, dest: Path):
-    out = dest / archive.stem
-    out.mkdir(parents=True, exist_ok=True)
+def download_github_repo() -> Path:
+    tmp = Path(tempfile.mkdtemp(prefix="cofrance_repo_"))
+    zip_path = tmp / "repo.zip"
+
+    url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/zipball/{GITHUB_BRANCH}"
+
+    response = requests.get(url, allow_redirects=True, timeout=60)
+    response.raise_for_status()
+    zip_path.write_bytes(response.content)
+
+    extract_dir = tmp / "repo"
+    extract_dir.mkdir(parents=True, exist_ok=True)
+
+    with zipfile.ZipFile(zip_path, "r") as archive:
+        archive.extractall(extract_dir)
+
+    repo_root = next(path for path in extract_dir.iterdir() if path.is_dir())
+    return repo_root
+
+
+def extract_archive(archive: Path, destination: Path) -> Path:
+    output = destination / archive.stem
+    output.mkdir(parents=True, exist_ok=True)
 
     if archive.suffix.lower() == ".zip":
         with zipfile.ZipFile(archive, "r") as z:
-            z.extractall(out)
+            z.extractall(output)
+
     elif archive.suffix.lower() == ".7z":
         with py7zr.SevenZipFile(archive, "r") as z:
-            z.extractall(out)
+            z.extractall(output)
+
     else:
-        raise ValueError(f"Unsupported archive: {archive}")
+        raise ValueError(f"Unsupported archive type: {archive}")
 
-    return out
+    return output
 
 
-def copy_tree(src: Path, dst: Path, exclude=None):
+def sync_tree(src: Path, dst: Path, exclude: list[str] | None = None):
+    dst.mkdir(parents=True, exist_ok=True)
+
+    for existing in sorted(dst.rglob("*"), reverse=True):
+        rel = existing.relative_to(dst)
+
+        if exclude and matches(rel, exclude):
+            continue
+
+        source_equivalent = src / rel
+
+        if not source_equivalent.exists():
+            if existing.is_dir():
+                shutil.rmtree(existing, ignore_errors=True)
+            else:
+                existing.unlink()
+
     for file in src.rglob("*"):
         if not file.is_file():
             continue
@@ -50,12 +97,25 @@ def apply_repo_layout(repo_root: Path, install_root: Path):
         dst = install_root / dst_rel
 
         if src.exists():
-            copy_tree(src, dst, exclude=GNG_ONLY_FILES)
+            sync_tree(src, dst, exclude=GNG_ONLY_FILES)
+
+
+def detect_sector_code(filename: str) -> str | None:
+    upper = filename.upper()
+
+    for code in FIRS + ["LFFM", "LFXX"]:
+        if upper.startswith(code):
+            return "LFXX" if code == "LFFM" else code
+
+    return None
 
 
 def apply_gng_packages(packages: list[Path], install_root: Path):
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp = Path(tmp)
+    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir.mkdir(parents=True, exist_ok=True)
+
+    with tempfile.TemporaryDirectory(prefix="cofrance_gng_") as tmp_name:
+        tmp = Path(tmp_name)
 
         for package in packages:
             extract_archive(package, tmp)
@@ -64,39 +124,72 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
             if not file.is_file():
                 continue
 
-            for pattern in GNG_ONLY_FILES:
-                for fir in FIRS + ["LFXX"]:
-                    parts = file.parts
-                    if fir in parts:
-                        rel_index = parts.index(fir)
-                        rel = Path(*parts[rel_index:])
+            suffix = file.suffix.lower()
 
-                        if matches(rel, GNG_ONLY_FILES):
-                            target = install_root / rel
-                            target.parent.mkdir(parents=True, exist_ok=True)
-                            shutil.copy2(file, target)
+            if suffix in [".sct", ".ese", ".rwy"]:
+                code = detect_sector_code(file.name)
+
+                if code:
+                    target = sector_dir / f"{code}{suffix}"
+
+                    if target.exists():
+                        target.unlink()
+
+                    shutil.copy2(file, target)
+
+                continue
+
+            parts = file.parts
+
+            for code in FIRS + ["LFXX", "LFFM"]:
+                if code in parts:
+                    index = parts.index(code)
+                    rel = Path(*parts[index:])
+
+                    if rel.parts[0] == "LFFM":
+                        rel = Path("LFXX", *rel.parts[1:])
+
+                    if matches(rel, GNG_ONLY_FILES):
+                        target = install_root / rel
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(file, target)
+
+                    break
 
 
 def normalize_sectors(install_root: Path):
-    sectors = install_root / "LFXX" / "Sectors"
-    sectors.mkdir(parents=True, exist_ok=True)
+    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir.mkdir(parents=True, exist_ok=True)
 
-    for file in list(sectors.iterdir()):
+    for file in list(sector_dir.iterdir()):
         if not file.is_file():
             continue
 
         if file.suffix.lower() not in [".sct", ".ese", ".rwy"]:
             continue
 
-        upper = file.name.upper()
+        code = detect_sector_code(file.name)
 
-        for code in FIRS + ["LFFM", "LFXX"]:
-            if upper.startswith(code):
-                target_code = "LFXX" if code == "LFFM" else code
-                target = sectors / f"{target_code}{file.suffix.lower()}"
+        if not code:
+            continue
 
-                if file != target:
-                    if target.exists():
-                        target.unlink()
-                    file.rename(target)
-                break
+        target = sector_dir / f"{code}{file.suffix.lower()}"
+
+        if file.resolve() != target.resolve():
+            if target.exists():
+                target.unlink()
+            file.rename(target)
+
+
+def update_controller_pack(
+    install_root: Path,
+    gng_packages: list[Path] | None = None,
+):
+    repo_root = download_github_repo()
+
+    apply_repo_layout(repo_root, install_root)
+
+    if gng_packages:
+        apply_gng_packages(gng_packages, install_root)
+
+    normalize_sectors(install_root)

@@ -6,21 +6,22 @@ REPO_LAYOUT_MAP = {
     "LFFF": "LFFF",
     "LFMM": "LFMM",
     "LFRR": "LFRR",
-    "LFFM": "LFFM",
+    "LFFM": "LFXX",
     "LFXX": "LFXX",
 }
 
 GNG_ONLY_FILES = [
-    "LFXX/Sectors/*.sct",
-    "LFXX/Sectors/*.ese",
-    "LFXX/Sectors/*.rwy",
+    "LFXX/Sector/*.sct",
+    "LFXX/Sector/*.ese",
+    "LFXX/Sector/*.rwy",
     "*/NavData/*.txt",
     "*/ICAO/*.txt",
     "*/Settings/LoginProfiles.txt",
     "*/Settings/VoiceChannels.txt",
 ]
 
-# GitHub repo settings
 GITHUB_OWNER = "DedpewlControl"
 GITHUB_REPO = "Sector-Files"
 GITHUB_BRANCH = "main"
+
+APP_NAME = "vACCFR Controller Pack Installer"
