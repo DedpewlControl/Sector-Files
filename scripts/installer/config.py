@@ -6,7 +6,6 @@ REPO_LAYOUT_MAP = {
     "LFFF": "LFFF",
     "LFMM": "LFMM",
     "LFRR": "LFRR",
-    "LFFM": "LFXX",
     "LFXX": "LFXX",
 }
 
@@ -14,14 +13,36 @@ GNG_ONLY_FILES = [
     "LFXX/Sector/*.sct",
     "LFXX/Sector/*.ese",
     "LFXX/Sector/*.rwy",
-    "*/NavData/*.txt",
-    "*/ICAO/*.txt",
-    "*/Settings/LoginProfiles.txt",
-    "*/Settings/VoiceChannels.txt",
+
+    "LFBB/ICAO/*",
+    "LFBB/NavData/*",
+    "LFBB/Settings/LoginProfiles.txt",
+    "LFBB/Settings/VoiceChannels.txt",
+
+    "LFEE/ICAO/*",
+    "LFEE/NavData/*",
+    "LFEE/Settings/LoginProfiles.txt",
+    "LFEE/Settings/VoiceChannels.txt",
+
+    "LFFF/ICAO/*",
+    "LFFF/NavData/*",
+    "LFFF/Settings/LoginProfiles.txt",
+    "LFFF/Settings/VoiceChannels.txt",
+
+    "LFMM/ICAO/*",
+    "LFMM/NavData/*",
+    "LFMM/Settings/LoginProfiles.txt",
+    "LFMM/Settings/VoiceChannels.txt",
+
+    "LFRR/ICAO/*",
+    "LFRR/NavData/*",
+    "LFRR/Settings/LoginProfiles.txt",
+    "LFRR/Settings/VoiceChannels.txt",
 ]
 
 GITHUB_OWNER = "DedpewlControl"
 GITHUB_REPO = "Sector-Files"
 GITHUB_BRANCH = "main"
 
-APP_NAME = "vACCFR Controller Pack Installer"
+APP_NAME = "CoFrance Installer"
+VERSION_FILE = ".github/installer-version.txt"

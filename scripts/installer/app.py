@@ -1,19 +1,45 @@
 from pathlib import Path
+import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
 from config import APP_NAME
-from engine import update_controller_pack
+from engine import update_controller_pack, get_local_version, get_github_version
+
+
+GREEN = "#2d7d46"
+AMBER = "#d08b00"
+GRAY = "#777777"
+
+
+def get_start_directory() -> Path:
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+
+    return Path.cwd()
+
+
+def looks_like_controller_pack(path: Path) -> bool:
+    return (
+        (path / "LFXX").exists()
+        and any((path / fir).exists() for fir in ["LFBB", "LFEE", "LFFF", "LFMM", "LFRR"])
+    )
 
 
 class InstallerApp:
     def __init__(self, root):
         self.root = root
         self.root.title(APP_NAME)
-        self.root.geometry("620x360")
+        self.root.geometry("680x455")
         self.root.resizable(False, False)
 
         self.install_dir = tk.StringVar()
+        self.version_text = tk.StringVar(value="Installed version: Checking... | GitHub version: Checking...")
+        self.package_text = tk.StringVar(value="No install/update packages selected")
+
+        self.github_version = "Unknown"
+        self.local_version = "Not selected"
+        self.update_available = False
         self.gng_packages: list[Path] = []
 
         tk.Label(
@@ -25,15 +51,15 @@ class InstallerApp:
         tk.Label(
             root,
             text=(
-                "Update from GitHub. Optionally select GNG ZIP/7Z packages "
-                "to refresh AIRAC/generated files."
+                "Select your Controller Pack Directory and either install or update "
+                "packages for AIRAC updates."
             ),
-            wraplength=560,
+            wraplength=620,
         ).pack(pady=4)
 
         tk.Button(
             root,
-            text="Select Installed France Folder",
+            text="Controller Pack Directory",
             command=self.select_install_folder,
             height=2,
         ).pack(fill="x", padx=40, pady=8)
@@ -41,40 +67,137 @@ class InstallerApp:
         tk.Label(
             root,
             textvariable=self.install_dir,
-            wraplength=560,
+            wraplength=620,
             fg="gray",
         ).pack()
 
         tk.Button(
             root,
-            text="Add Optional GNG ZIP/7Z Packages",
+            text="Install/Update Packages",
             command=self.select_gng_packages,
             height=2,
         ).pack(fill="x", padx=40, pady=8)
 
-        self.gng_label = tk.Label(root, text="No GNG packages selected", fg="gray")
-        self.gng_label.pack()
-
-        tk.Button(
+        tk.Label(
             root,
-            text="Update Controller Pack",
+            textvariable=self.package_text,
+            fg="gray",
+        ).pack()
+
+        self.action_button = tk.Button(
+            root,
+            text="Update Controller Pack from GitHub",
             command=self.run_update,
             height=2,
-            bg="#2d7d46",
+            bg=GREEN,
             fg="white",
-        ).pack(fill="x", padx=40, pady=22)
+        )
+        self.action_button.pack(fill="x", padx=40, pady=18)
+
+        tk.Label(
+            root,
+            textvariable=self.version_text,
+            fg="gray",
+            wraplength=620,
+        ).pack()
+
+        self.auto_detect_start_directory()
+        self.refresh_versions()
+        self.refresh_action_button()
+
+    def auto_detect_start_directory(self):
+        start_dir = get_start_directory()
+
+        if looks_like_controller_pack(start_dir):
+            self.install_dir.set(str(start_dir))
+
+    def selected_package_mode(self) -> str:
+        if not self.gng_packages:
+            return "github"
+
+        names = " ".join(package.name.lower() for package in self.gng_packages)
+
+        if "install" in names:
+            return "install"
+
+        if "update" in names:
+            return "update_gng"
+
+        return "update_gng"
+
+    def refresh_action_button(self):
+        mode = self.selected_package_mode()
+        count = len(self.gng_packages)
+
+        if mode == "install":
+            self.action_button.config(text="Install Controller Pack")
+            self.package_text.set(f"Install package detected — {count} package(s) selected")
+        elif mode == "update_gng":
+            self.action_button.config(text="Update Controller Pack from GitHub + GNG")
+            self.package_text.set(f"Update package detected — {count} package(s) selected")
+        else:
+            self.action_button.config(text="Update Controller Pack from GitHub")
+            self.package_text.set("No install/update packages selected")
+
+        if self.github_version in ["Unknown", "Unable to check"]:
+            self.action_button.config(bg=GRAY)
+        elif self.update_available:
+            self.action_button.config(bg=AMBER)
+        else:
+            self.action_button.config(bg=GREEN)
+
+    def refresh_versions(self):
+        install_root = Path(self.install_dir.get()) if self.install_dir.get() else None
+
+        try:
+            self.github_version = get_github_version()
+        except Exception:
+            self.github_version = "Unable to check"
+
+        if install_root:
+            try:
+                self.local_version = get_local_version(install_root)
+            except Exception:
+                self.local_version = "Unknown"
+        else:
+            self.local_version = "Not selected"
+
+        self.update_available = (
+            self.github_version not in ["Unknown", "Unable to check"]
+            and self.local_version not in ["Not selected", "Not installed", "Unknown"]
+            and self.local_version != self.github_version
+        )
+
+        if self.local_version == "Not installed":
+            status = "Not installed"
+        elif self.github_version == "Unable to check":
+            status = "Could not check GitHub"
+        elif self.update_available:
+            status = "Update available"
+        elif self.local_version == self.github_version:
+            status = "Up to date"
+        else:
+            status = "Ready"
+
+        self.version_text.set(
+            f"Installed version: {self.local_version} | "
+            f"GitHub version: {self.github_version} | "
+            f"Status: {status}"
+        )
 
     def select_install_folder(self):
         folder = filedialog.askdirectory(
-            title="Select installed France controller pack folder"
+            title="Select controller pack directory"
         )
 
         if folder:
             self.install_dir.set(folder)
+            self.refresh_versions()
+            self.refresh_action_button()
 
     def select_gng_packages(self):
         files = filedialog.askopenfilenames(
-            title="Select GNG update packages",
+            title="Select install/update packages",
             filetypes=[
                 ("Archive files", "*.zip *.7z"),
                 ("ZIP files", "*.zip"),
@@ -83,19 +206,18 @@ class InstallerApp:
         )
 
         self.gng_packages = [Path(file) for file in files]
-        self.gng_label.config(
-            text=f"{len(self.gng_packages)} GNG package(s) selected"
-        )
+        self.refresh_action_button()
 
     def run_update(self):
         if not self.install_dir.get():
             messagebox.showerror(
-                "Missing install folder",
-                "Please select the installed France folder first.",
+                "Missing directory",
+                "Please select the controller pack directory first.",
             )
             return
 
         install_root = Path(self.install_dir.get())
+        mode = self.selected_package_mode()
 
         try:
             self.root.config(cursor="wait")
@@ -106,16 +228,20 @@ class InstallerApp:
                 gng_packages=self.gng_packages,
             )
 
-            messagebox.showinfo(
-                "Update complete",
-                "Controller pack update completed successfully.",
-            )
+            self.refresh_versions()
+            self.refresh_action_button()
+
+            if mode == "install":
+                message = "Controller pack installation completed successfully."
+            elif mode == "update_gng":
+                message = "Controller pack GitHub + GNG update completed successfully."
+            else:
+                message = "Controller pack GitHub update completed successfully."
+
+            messagebox.showinfo("Complete", message)
 
         except Exception as error:
-            messagebox.showerror(
-                "Update failed",
-                str(error),
-            )
+            messagebox.showerror("Failed", str(error))
 
         finally:
             self.root.config(cursor="")

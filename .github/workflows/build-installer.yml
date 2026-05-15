@@ -20,6 +20,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Write build info
+        shell: pwsh
+        run: |
+          Set-Content -Path "scripts/installer/build_info.py" -Value "BUILD_COMMIT = '${{ github.sha }}'.strip()[:7]"
+          Add-Content -Path "scripts/installer/build_info.py" -Value "BUILD_BRANCH = '${{ github.ref_name }}'"
+
       - name: Install dependencies
         working-directory: scripts/installer
         run: |
@@ -34,5 +40,5 @@ jobs:
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CoFrance-Installer
+          name: CoFrance-Installer-${{ github.sha }}
           path: scripts/installer/dist/CoFrance Installer.exe
