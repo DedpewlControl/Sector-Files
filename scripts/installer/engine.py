@@ -83,12 +83,7 @@ def extract_archive(archive: Path, destination: Path) -> Path:
     return output
 
 
-def sync_tree(
-    src: Path,
-    dst: Path,
-    dst_prefix: Path,
-    exclude: list[str] | None = None,
-):
+def sync_tree(src: Path, dst: Path, dst_prefix: Path, exclude: list[str] | None = None):
     dst.mkdir(parents=True, exist_ok=True)
 
     for existing in sorted(dst.rglob("*"), reverse=True):
@@ -185,28 +180,23 @@ def write_current_airac_cycle(install_root: Path, cycle: str):
 
 def backup_existing_sector_files(install_root: Path):
     sector_dir = install_root / "LFXX" / "Sectors"
+    sector_dir.mkdir(parents=True, exist_ok=True)
 
-    if not sector_dir.exists():
-        return
+    cycle = get_current_airac_cycle(install_root)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    backup_dir = sector_dir / f"Backup_AIRAC_{cycle}_{timestamp}"
+    backup_dir.mkdir(parents=True, exist_ok=True)
 
     files = [
         file for file in sector_dir.iterdir()
         if file.is_file() and file.suffix.lower() in [".sct", ".ese", ".rwy"]
     ]
 
-    if not files:
-        return
-
-    cycle = get_current_airac_cycle(install_root)
-    backup_dir = sector_dir / f"Backup_AIRAC_{cycle}"
-
-    if backup_dir.exists():
-        backup_dir = sector_dir / f"Backup_AIRAC_{cycle}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-    backup_dir.mkdir(parents=True, exist_ok=True)
-
     for file in files:
         shutil.copy2(file, backup_dir / file.name)
+
+    return backup_dir
 
 
 def copy_single_copyright_file(source_root: Path, install_root: Path):
@@ -234,7 +224,6 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
     sector_dir = install_root / "LFXX" / "Sectors"
     sector_dir.mkdir(parents=True, exist_ok=True)
 
-    sector_update_detected = False
     new_airac_cycle = None
 
     with tempfile.TemporaryDirectory(prefix="cofrance_gng_") as tmp_name:
@@ -243,25 +232,8 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
         for package in packages:
             extract_archive(package, tmp)
 
-        for file in tmp.rglob("*"):
-            if not file.is_file():
-                continue
-
-            if file.suffix.lower() not in [".sct", ".ese", ".rwy"]:
-                continue
-
-            if should_skip_sector_file(file):
-                continue
-
-            if detect_sector_code(file.name):
-                sector_update_detected = True
-                cycle = extract_airac_cycle_from_name(file.name)
-                if cycle:
-                    new_airac_cycle = cycle
-                break
-
-        if sector_update_detected:
-            backup_existing_sector_files(install_root)
+        # Always create a sector backup when GNG packages are provided.
+        backup_existing_sector_files(install_root)
 
         copy_single_copyright_file(tmp, install_root)
 
@@ -281,6 +253,10 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
                 code = detect_sector_code(file.name)
 
                 if code:
+                    cycle = extract_airac_cycle_from_name(file.name)
+                    if cycle:
+                        new_airac_cycle = cycle
+
                     target = sector_dir / f"{code}{suffix}"
 
                     if target.exists():
@@ -341,16 +317,9 @@ def normalize_sectors(install_root: Path):
             file.rename(target)
 
 
-def lfxx_settings_backup_exists(install_root: Path) -> bool:
-    backup_root = install_root / "LFXX" / "Settings_Backups"
-    return backup_root.exists() and any(backup_root.iterdir())
-
-
 def backup_lfxx_settings(install_root: Path):
     settings_dir = install_root / "LFXX" / "Settings"
-
-    if not settings_dir.exists():
-        return
+    settings_dir.mkdir(parents=True, exist_ok=True)
 
     backup_dir = (
         install_root
@@ -359,7 +328,18 @@ def backup_lfxx_settings(install_root: Path):
         / datetime.now().strftime("%Y%m%d_%H%M%S")
     )
 
-    shutil.copytree(settings_dir, backup_dir)
+    backup_dir.mkdir(parents=True, exist_ok=True)
+
+    for item in settings_dir.rglob("*"):
+        if not item.is_file():
+            continue
+
+        rel = item.relative_to(settings_dir)
+        target = backup_dir / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(item, target)
+
+    return backup_dir
 
 
 def lfxx_settings_would_change(repo_root: Path, install_root: Path) -> bool:
@@ -434,12 +414,9 @@ def update_controller_pack(
     github_version = get_github_version()
     repo_root = download_github_repo()
 
-    if (
-        lfxx_settings_would_change(repo_root, install_root)
-        and not lfxx_settings_backup_exists(install_root)
-    ):
-        if backup_settings_callback and backup_settings_callback():
-            backup_lfxx_settings(install_root)
+    # If user says Yes in the GUI, always back up LFXX/Settings.
+    if backup_settings_callback and backup_settings_callback():
+        backup_lfxx_settings(install_root)
 
     apply_repo_layout(repo_root, install_root)
 
