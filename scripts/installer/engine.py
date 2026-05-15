@@ -38,10 +38,8 @@ def get_github_version() -> str:
 
 def get_local_version(install_root: Path) -> str:
     version_file = install_root / VERSION_FILE
-
     if version_file.exists():
         return version_file.read_text(encoding="utf-8", errors="ignore").strip()
-
     return "Not installed"
 
 
@@ -56,7 +54,6 @@ def download_github_repo() -> Path:
     zip_path = tmp / "repo.zip"
 
     url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/zipball/{GITHUB_BRANCH}"
-
     response = requests.get(url, allow_redirects=True, timeout=60)
     response.raise_for_status()
     zip_path.write_bytes(response.content)
@@ -86,13 +83,19 @@ def extract_archive(archive: Path, destination: Path) -> Path:
     return output
 
 
-def sync_tree(src: Path, dst: Path, exclude: list[str] | None = None):
+def sync_tree(
+    src: Path,
+    dst: Path,
+    dst_prefix: Path,
+    exclude: list[str] | None = None,
+):
     dst.mkdir(parents=True, exist_ok=True)
 
     for existing in sorted(dst.rglob("*"), reverse=True):
         rel = existing.relative_to(dst)
+        full_rel = dst_prefix / rel
 
-        if exclude and matches(rel, exclude):
+        if exclude and matches(full_rel, exclude):
             continue
 
         if not (src / rel).exists():
@@ -109,8 +112,9 @@ def sync_tree(src: Path, dst: Path, exclude: list[str] | None = None):
             continue
 
         rel = file.relative_to(src)
+        full_rel = dst_prefix / rel
 
-        if exclude and matches(rel, exclude):
+        if exclude and matches(full_rel, exclude):
             continue
 
         target = dst / rel
@@ -124,7 +128,12 @@ def apply_repo_layout(repo_root: Path, install_root: Path):
         dst = install_root / dst_rel
 
         if src.exists():
-            sync_tree(src, dst, exclude=GNG_ONLY_FILES)
+            sync_tree(
+                src=src,
+                dst=dst,
+                dst_prefix=Path(dst_rel),
+                exclude=GNG_ONLY_FILES,
+            )
 
 
 def detect_sector_code(filename: str) -> str | None:
@@ -150,14 +159,14 @@ def extract_airac_cycle_from_name(name: str) -> str | None:
 
 
 def get_current_airac_cycle(install_root: Path) -> str:
-    marker = install_root / "LFXX" / "Sector" / "current_airac.txt"
+    marker = install_root / "LFXX" / "Sectors" / "current_airac.txt"
 
     if marker.exists():
         value = marker.read_text(encoding="utf-8", errors="ignore").strip()
         if value:
             return value
 
-    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir = install_root / "LFXX" / "Sectors"
 
     if sector_dir.exists():
         for file in sector_dir.iterdir():
@@ -169,13 +178,13 @@ def get_current_airac_cycle(install_root: Path) -> str:
 
 
 def write_current_airac_cycle(install_root: Path, cycle: str):
-    marker = install_root / "LFXX" / "Sector" / "current_airac.txt"
+    marker = install_root / "LFXX" / "Sectors" / "current_airac.txt"
     marker.parent.mkdir(parents=True, exist_ok=True)
     marker.write_text(cycle, encoding="utf-8")
 
 
 def backup_existing_sector_files(install_root: Path):
-    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir = install_root / "LFXX" / "Sectors"
 
     if not sector_dir.exists():
         return
@@ -222,7 +231,7 @@ def remove_duplicate_copyright_files(install_root: Path):
 
 
 def apply_gng_packages(packages: list[Path], install_root: Path):
-    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir = install_root / "LFXX" / "Sectors"
     sector_dir.mkdir(parents=True, exist_ok=True)
 
     sector_update_detected = False
@@ -246,11 +255,9 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
 
             if detect_sector_code(file.name):
                 sector_update_detected = True
-
                 cycle = extract_airac_cycle_from_name(file.name)
                 if cycle:
                     new_airac_cycle = cycle
-
                 break
 
         if sector_update_detected:
@@ -307,7 +314,7 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
 
 
 def normalize_sectors(install_root: Path):
-    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir = install_root / "LFXX" / "Sectors"
     sector_dir.mkdir(parents=True, exist_ok=True)
 
     for file in list(sector_dir.iterdir()):
@@ -411,7 +418,7 @@ def cleanup_install(install_root: Path):
     remove_duplicate_copyright_files(install_root)
     cleanup_legacy_root_files(install_root)
 
-    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir = install_root / "LFXX" / "Sectors"
 
     for bad_name in ["LFFM.sct", "LFXX.sct"]:
         bad_file = sector_dir / bad_name

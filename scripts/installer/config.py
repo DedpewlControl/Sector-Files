@@ -10,11 +10,16 @@ REPO_LAYOUT_MAP = {
 }
 
 GNG_ONLY_FILES = [
-    "LFXX/Sector/*.sct",
-    "LFXX/Sector/*.ese",
-    "LFXX/Sector/*.rwy",
+    "LFXX/Sectors/*.sct",
+    "LFXX/Sectors/*.ese",
+    "LFXX/Sectors/*.rwy",
+    "LFXX/Sectors/current_airac.txt",
+    "LFXX/Sectors/Backup_AIRAC_*",
+    "LFXX/Sectors/Backup_AIRAC_*/*",
 
     "LFXX/Alias/*",
+    "LFXX/Settings_Backups/*",
+    "LFXX/Settings_Backups/*/*",
 
     "LFBB/ICAO/*",
     "LFBB/NavData/*",
