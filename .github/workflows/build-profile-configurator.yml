@@ -1,4 +1,4 @@
-name: Build ProfileConfigurator EXE
+name: Build Profile Configurator EXE
 
 on:
   push:
@@ -22,12 +22,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build ProfileConfigurator EXE
+      - name: Build Profile Configurator folder
         working-directory: scripts/profileconfigurator
         run: |
-          pyinstaller --onefile --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --name "ProfileConfigurator" ProfileConfigurator.py
+          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
+
+      - name: Zip Profile Configurator
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "scripts/profileconfigurator/dist/ProfileConfigurator/*" -DestinationPath "ProfileConfigurator.zip"
 
       - uses: actions/upload-artifact@v4
         with:
           name: ProfileConfigurator
-          path: scripts/profileconfigurator/dist/ProfileConfigurator.exe
+          path: ProfileConfigurator.zip

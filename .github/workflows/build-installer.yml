@@ -29,12 +29,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build Installer EXE
+      - name: Build Installer folder
         working-directory: scripts/installer
         run: |
-          pyinstaller --onefile --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --name "Installer" app.py
+          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "Installer" app.py
+
+      - name: Zip Installer
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "scripts/installer/dist/Installer/*" -DestinationPath "Installer.zip"
 
       - uses: actions/upload-artifact@v4
         with:
           name: Installer
-          path: scripts/installer/dist/Installer.exe
+          path: Installer.zip

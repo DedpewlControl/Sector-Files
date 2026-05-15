@@ -179,7 +179,7 @@ class ProfileConfiguratorApp:
 
         tk.Label(
             root,
-            text="CoFrance Profile Configurator",
+            text="Profile Configurator",
             font=("Segoe UI", 16, "bold"),
         ).pack(pady=14)
 

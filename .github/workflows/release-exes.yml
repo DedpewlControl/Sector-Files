@@ -1,8 +1,8 @@
-name: Release EXEs
+name: Release Tools
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 permissions:
   contents: write
@@ -25,30 +25,29 @@ jobs:
           Set-Content -Path "scripts/installer/build_info.py" -Value "BUILD_COMMIT = '$shortSha'"
           Add-Content -Path "scripts/installer/build_info.py" -Value "BUILD_BRANCH = '${{ github.ref_name }}'"
 
-      - name: Install installer dependencies
+      - name: Build Installer
         working-directory: scripts/installer
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "Installer" app.py
 
-      - name: Build Installer
-        working-directory: scripts/installer
-        run: |
-          pyinstaller --onefile --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --name "Installer" app.py
-
-      - name: Install profile configurator dependencies
+      - name: Build Profile Configurator
         working-directory: scripts/profileconfigurator
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
 
-      - name: Build ProfileConfigurator
-        working-directory: scripts/profileconfigurator
+      - name: Zip release assets
+        shell: pwsh
         run: |
-          pyinstaller --onefile --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --name "ProfileConfigurator" ProfileConfigurator.py
+          Compress-Archive -Path "scripts/installer/dist/Installer/*" -DestinationPath "Installer.zip"
+          Compress-Archive -Path "scripts/profileconfigurator/dist/ProfileConfigurator/*" -DestinationPath "ProfileConfigurator.zip"
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            scripts/installer/dist/Installer.exe
-            scripts/profileconfigurator/dist/ProfileConfigurator.exe
+            Installer.zip
+            ProfileConfigurator.zip
