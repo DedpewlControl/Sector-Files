@@ -239,13 +239,6 @@ class InstallerApp:
         self.gng_packages = [Path(file) for file in files]
         self.refresh_action_button()
 
-    def ask_backup_settings(self) -> bool:
-        return messagebox.askyesno(
-            "Backup LFXX settings?",
-            "The update will modify files in LFXX/Settings.\n\n"
-            "A settings backup has not been found yet.\n\n"
-            "Do you want to back up your current LFXX/Settings folder before continuing?"
-        )
 
     def run_update(self):
         if not self.install_dir.get():
@@ -265,7 +258,6 @@ class InstallerApp:
             update_controller_pack(
                 install_root=install_root,
                 gng_packages=self.gng_packages,
-                backup_settings_callback=self.ask_backup_settings,
             )
 
             self.refresh_versions()

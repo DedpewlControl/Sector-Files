@@ -38,8 +38,10 @@ def get_github_version() -> str:
 
 def get_local_version(install_root: Path) -> str:
     version_file = install_root / VERSION_FILE
+
     if version_file.exists():
         return version_file.read_text(encoding="utf-8", errors="ignore").strip()
+
     return "Not installed"
 
 
@@ -54,6 +56,7 @@ def download_github_repo() -> Path:
     zip_path = tmp / "repo.zip"
 
     url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/zipball/{GITHUB_BRANCH}"
+
     response = requests.get(url, allow_redirects=True, timeout=60)
     response.raise_for_status()
     zip_path.write_bytes(response.content)
@@ -74,16 +77,23 @@ def extract_archive(archive: Path, destination: Path) -> Path:
     if archive.suffix.lower() == ".zip":
         with zipfile.ZipFile(archive, "r") as z:
             z.extractall(output)
+
     elif archive.suffix.lower() == ".7z":
         with py7zr.SevenZipFile(archive, "r") as z:
             z.extractall(output)
+
     else:
         raise ValueError(f"Unsupported archive type: {archive}")
 
     return output
 
 
-def sync_tree(src: Path, dst: Path, dst_prefix: Path, exclude: list[str] | None = None):
+def sync_tree(
+    src: Path,
+    dst: Path,
+    dst_prefix: Path,
+    exclude: list[str] | None = None,
+):
     dst.mkdir(parents=True, exist_ok=True)
 
     for existing in sorted(dst.rglob("*"), reverse=True):
@@ -148,8 +158,10 @@ def should_skip_sector_file(file: Path) -> bool:
 
 def extract_airac_cycle_from_name(name: str) -> str | None:
     match = re.search(r"-(\d{6})-", name)
+
     if match:
         return match.group(1)
+
     return None
 
 
@@ -158,6 +170,7 @@ def get_current_airac_cycle(install_root: Path) -> str:
 
     if marker.exists():
         value = marker.read_text(encoding="utf-8", errors="ignore").strip()
+
         if value:
             return value
 
@@ -166,6 +179,7 @@ def get_current_airac_cycle(install_root: Path) -> str:
     if sector_dir.exists():
         for file in sector_dir.iterdir():
             cycle = extract_airac_cycle_from_name(file.name)
+
             if cycle:
                 return cycle
 
@@ -199,6 +213,33 @@ def backup_existing_sector_files(install_root: Path):
     return backup_dir
 
 
+def backup_lfxx_settings(install_root: Path):
+    settings_dir = install_root / "LFXX" / "Settings"
+    settings_dir.mkdir(parents=True, exist_ok=True)
+
+    backup_dir = (
+        install_root
+        / "LFXX"
+        / "Settings_Backups"
+        / datetime.now().strftime("%Y%m%d_%H%M%S")
+    )
+
+    backup_dir.mkdir(parents=True, exist_ok=True)
+
+    for item in settings_dir.rglob("*"):
+        if not item.is_file():
+            continue
+
+        rel = item.relative_to(settings_dir)
+
+        target = backup_dir / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+
+        shutil.copy2(item, target)
+
+    return backup_dir
+
+
 def copy_single_copyright_file(source_root: Path, install_root: Path):
     target = install_root / COPYRIGHT_FILE
 
@@ -217,6 +258,7 @@ def remove_duplicate_copyright_files(install_root: Path):
     for file in install_root.rglob(COPYRIGHT_FILE):
         if file.resolve() == root_copy.resolve():
             continue
+
         file.unlink()
 
 
@@ -231,9 +273,6 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
 
         for package in packages:
             extract_archive(package, tmp)
-
-        # Always create a sector backup when GNG packages are provided.
-        backup_existing_sector_files(install_root)
 
         copy_single_copyright_file(tmp, install_root)
 
@@ -254,6 +293,7 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
 
                 if code:
                     cycle = extract_airac_cycle_from_name(file.name)
+
                     if cycle:
                         new_airac_cycle = cycle
 
@@ -271,6 +311,7 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
             for fir in FIRS + ["LFXX", "LFFM"]:
                 if fir in parts:
                     index = parts.index(fir)
+
                     rel = Path(*parts[index:])
 
                     if rel.parts[0] == "LFFM":
@@ -314,64 +355,8 @@ def normalize_sectors(install_root: Path):
         if file.resolve() != target.resolve():
             if target.exists():
                 target.unlink()
+
             file.rename(target)
-
-
-def backup_lfxx_settings(install_root: Path):
-    settings_dir = install_root / "LFXX" / "Settings"
-    settings_dir.mkdir(parents=True, exist_ok=True)
-
-    backup_dir = (
-        install_root
-        / "LFXX"
-        / "Settings_Backups"
-        / datetime.now().strftime("%Y%m%d_%H%M%S")
-    )
-
-    backup_dir.mkdir(parents=True, exist_ok=True)
-
-    for item in settings_dir.rglob("*"):
-        if not item.is_file():
-            continue
-
-        rel = item.relative_to(settings_dir)
-        target = backup_dir / rel
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(item, target)
-
-    return backup_dir
-
-
-def lfxx_settings_would_change(repo_root: Path, install_root: Path) -> bool:
-    repo_settings = repo_root / "LFXX" / "Settings"
-    installed_settings = install_root / "LFXX" / "Settings"
-
-    if not repo_settings.exists():
-        return False
-
-    if not installed_settings.exists():
-        return True
-
-    repo_files = {
-        file.relative_to(repo_settings)
-        for file in repo_settings.rglob("*")
-        if file.is_file()
-    }
-
-    installed_files = {
-        file.relative_to(installed_settings)
-        for file in installed_settings.rglob("*")
-        if file.is_file()
-    }
-
-    if repo_files != installed_files:
-        return True
-
-    for rel in repo_files:
-        if not filecmp.cmp(repo_settings / rel, installed_settings / rel, shallow=False):
-            return True
-
-    return False
 
 
 def cleanup_legacy_root_files(install_root: Path):
@@ -385,6 +370,7 @@ def cleanup_legacy_root_files(install_root: Path):
         if item.is_dir():
             if item.name.upper() == "EXE":
                 shutil.rmtree(item, ignore_errors=True)
+
             continue
 
         if item.name in allowed_root_files:
@@ -402,6 +388,7 @@ def cleanup_install(install_root: Path):
 
     for bad_name in ["LFFM.sct", "LFXX.sct"]:
         bad_file = sector_dir / bad_name
+
         if bad_file.exists():
             bad_file.unlink()
 
@@ -409,14 +396,16 @@ def cleanup_install(install_root: Path):
 def update_controller_pack(
     install_root: Path,
     gng_packages: list[Path] | None = None,
-    backup_settings_callback=None,
 ):
     github_version = get_github_version()
     repo_root = download_github_repo()
 
-    # If user says Yes in the GUI, always back up LFXX/Settings.
-    if backup_settings_callback and backup_settings_callback():
-        backup_lfxx_settings(install_root)
+    # Always back up settings automatically.
+    backup_lfxx_settings(install_root)
+
+    # Always back up sectors automatically when GNG packages exist.
+    if gng_packages:
+        backup_existing_sector_files(install_root)
 
     apply_repo_layout(repo_root, install_root)
 
