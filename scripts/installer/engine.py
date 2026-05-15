@@ -168,7 +168,7 @@ def remove_duplicate_copyright_files(install_root: Path):
 
 
 def apply_gng_packages(packages: list[Path], install_root: Path):
-    sector_dir = install_root / "LFXX" / "Sector"
+    sector_dir = install_root / "LFXX" / "Sectors"
     sector_dir.mkdir(parents=True, exist_ok=True)
 
     with tempfile.TemporaryDirectory(prefix="cofrance_gng_") as tmp_name:
