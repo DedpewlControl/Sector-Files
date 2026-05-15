@@ -14,6 +14,8 @@ GNG_ONLY_FILES = [
     "LFXX/Sector/*.ese",
     "LFXX/Sector/*.rwy",
 
+    "LFXX/Alias/*",
+
     "LFBB/ICAO/*",
     "LFBB/NavData/*",
     "LFBB/Settings/LoginProfiles.txt",

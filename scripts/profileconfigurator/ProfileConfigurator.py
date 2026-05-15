@@ -47,6 +47,10 @@ def find_prf_files(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.prf") if path.is_file())
 
 
+def find_login_profiles_files(root: Path) -> list[Path]:
+    return sorted(path for path in root.rglob("LoginProfiles.txt") if path.is_file())
+
+
 def rating_to_euroscope_value(rating: str) -> str:
     try:
         return str(RATINGS.index(rating.strip().upper()))
@@ -155,6 +159,21 @@ def patch_prf_file(path: Path, details: dict) -> bool:
     return True
 
 
+def patch_login_profiles_file(path: Path, cid: str) -> bool:
+    try:
+        original = path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return False
+
+    updated = original.replace("VOTRE_CID_ICI", cid)
+
+    if updated == original:
+        return False
+
+    path.write_text(updated, encoding="utf-8", newline="")
+    return True
+
+
 class ProfileConfiguratorApp:
     def __init__(self, root):
         self.root = root
@@ -186,8 +205,8 @@ class ProfileConfiguratorApp:
         tk.Label(
             root,
             text=(
-                "Update EuroScope login details and EuroScopeRPC settings "
-                "for all PRF files in your controller pack."
+                "Update EuroScope login details, rating, EuroScopeRPC settings, "
+                "and LoginProfiles feedback links for your controller pack."
             ),
             wraplength=660,
         ).pack(pady=4)
@@ -295,8 +314,11 @@ class ProfileConfiguratorApp:
             self.status_text.set("Ready")
             self.action_button.config(bg=GREEN)
 
-        count = len(find_prf_files(path))
-        self.prf_count_text.set(f"Profiles detected: {count}")
+        prf_count = len(find_prf_files(path))
+        login_count = len(find_login_profiles_files(path))
+        self.prf_count_text.set(
+            f"Profiles detected: {prf_count} | LoginProfiles detected: {login_count}"
+        )
 
     def select_controller_pack_directory(self):
         folder = filedialog.askdirectory(title="Select controller pack directory")
@@ -337,19 +359,30 @@ class ProfileConfiguratorApp:
             }
 
             controller_pack_dir = Path(self.controller_pack_dir.get())
-            prf_files = find_prf_files(controller_pack_dir)
 
-            changed = 0
+            prf_files = find_prf_files(controller_pack_dir)
+            login_profiles_files = find_login_profiles_files(controller_pack_dir)
+
+            prf_changed = 0
+            login_profiles_changed = 0
 
             for prf in prf_files:
                 if patch_prf_file(prf, details):
-                    changed += 1
+                    prf_changed += 1
+
+            for login_file in login_profiles_files:
+                if patch_login_profiles_file(login_file, details["cid"]):
+                    login_profiles_changed += 1
+
+            self.refresh_status()
 
             messagebox.showinfo(
                 "Complete",
-                f"Finished updating PRF files.\n\n"
-                f"Found: {len(prf_files)}\n"
-                f"Modified: {changed}",
+                f"Finished updating profile files.\n\n"
+                f"PRFs found: {len(prf_files)}\n"
+                f"PRFs modified: {prf_changed}\n"
+                f"LoginProfiles found: {len(login_profiles_files)}\n"
+                f"LoginProfiles modified: {login_profiles_changed}",
             )
 
         except Exception as error:
