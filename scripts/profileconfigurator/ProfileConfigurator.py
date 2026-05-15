@@ -308,7 +308,7 @@ class ProfileConfiguratorApp:
             return
 
         if not looks_like_controller_pack(path):
-            self.status_text.set("Selected folder does not look like a CoFrance controller pack")
+            self.status_text.set("Selected folder does not look like a CoFrance Controller Pack")
             self.action_button.config(bg=AMBER)
         else:
             self.status_text.set("Ready")

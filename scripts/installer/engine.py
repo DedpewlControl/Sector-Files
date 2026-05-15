@@ -1,5 +1,8 @@
 from pathlib import Path
+from datetime import datetime
+import filecmp
 import fnmatch
+import re
 import shutil
 import tempfile
 import zipfile
@@ -20,11 +23,6 @@ from config import (
 
 COPYRIGHT_FILE = "aeronav_copyright.txt"
 
-try:
-    from build_info import BUILD_COMMIT
-except Exception:
-    BUILD_COMMIT = "dev"
-
 
 def matches(path: Path, patterns: list[str]) -> bool:
     normalized = path.as_posix()
@@ -33,10 +31,8 @@ def matches(path: Path, patterns: list[str]) -> bool:
 
 def get_github_version() -> str:
     url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/commits/{GITHUB_BRANCH}"
-
     response = requests.get(url, timeout=30)
     response.raise_for_status()
-
     return response.json()["sha"][:7]
 
 
@@ -146,6 +142,64 @@ def should_skip_sector_file(file: Path) -> bool:
     return upper.startswith("LFFM") and file.suffix.lower() == ".sct"
 
 
+def extract_airac_cycle_from_name(name: str) -> str | None:
+    match = re.search(r"-(\d{6})-", name)
+    if match:
+        return match.group(1)
+    return None
+
+
+def get_current_airac_cycle(install_root: Path) -> str:
+    marker = install_root / "LFXX" / "Sector" / "current_airac.txt"
+
+    if marker.exists():
+        value = marker.read_text(encoding="utf-8", errors="ignore").strip()
+        if value:
+            return value
+
+    sector_dir = install_root / "LFXX" / "Sector"
+
+    if sector_dir.exists():
+        for file in sector_dir.iterdir():
+            cycle = extract_airac_cycle_from_name(file.name)
+            if cycle:
+                return cycle
+
+    return "unknown"
+
+
+def write_current_airac_cycle(install_root: Path, cycle: str):
+    marker = install_root / "LFXX" / "Sector" / "current_airac.txt"
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    marker.write_text(cycle, encoding="utf-8")
+
+
+def backup_existing_sector_files(install_root: Path):
+    sector_dir = install_root / "LFXX" / "Sector"
+
+    if not sector_dir.exists():
+        return
+
+    files = [
+        file for file in sector_dir.iterdir()
+        if file.is_file() and file.suffix.lower() in [".sct", ".ese", ".rwy"]
+    ]
+
+    if not files:
+        return
+
+    cycle = get_current_airac_cycle(install_root)
+    backup_dir = sector_dir / f"Backup_AIRAC_{cycle}"
+
+    if backup_dir.exists():
+        backup_dir = sector_dir / f"Backup_AIRAC_{cycle}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+
+    backup_dir.mkdir(parents=True, exist_ok=True)
+
+    for file in files:
+        shutil.copy2(file, backup_dir / file.name)
+
+
 def copy_single_copyright_file(source_root: Path, install_root: Path):
     target = install_root / COPYRIGHT_FILE
 
@@ -168,14 +222,39 @@ def remove_duplicate_copyright_files(install_root: Path):
 
 
 def apply_gng_packages(packages: list[Path], install_root: Path):
-    sector_dir = install_root / "LFXX" / "Sectors"
+    sector_dir = install_root / "LFXX" / "Sector"
     sector_dir.mkdir(parents=True, exist_ok=True)
+
+    sector_update_detected = False
+    new_airac_cycle = None
 
     with tempfile.TemporaryDirectory(prefix="cofrance_gng_") as tmp_name:
         tmp = Path(tmp_name)
 
         for package in packages:
             extract_archive(package, tmp)
+
+        for file in tmp.rglob("*"):
+            if not file.is_file():
+                continue
+
+            if file.suffix.lower() not in [".sct", ".ese", ".rwy"]:
+                continue
+
+            if should_skip_sector_file(file):
+                continue
+
+            if detect_sector_code(file.name):
+                sector_update_detected = True
+
+                cycle = extract_airac_cycle_from_name(file.name)
+                if cycle:
+                    new_airac_cycle = cycle
+
+                break
+
+        if sector_update_detected:
+            backup_existing_sector_files(install_root)
 
         copy_single_copyright_file(tmp, install_root)
 
@@ -196,18 +275,23 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
 
                 if code:
                     target = sector_dir / f"{code}{suffix}"
+
                     if target.exists():
                         target.unlink()
+
                     shutil.copy2(file, target)
 
                 continue
 
             parts = file.parts
 
-            for fir in FIRS:
+            for fir in FIRS + ["LFXX", "LFFM"]:
                 if fir in parts:
                     index = parts.index(fir)
                     rel = Path(*parts[index:])
+
+                    if rel.parts[0] == "LFFM":
+                        rel = Path("LFXX", *rel.parts[1:])
 
                     if matches(rel, GNG_ONLY_FILES):
                         target = install_root / rel
@@ -215,6 +299,9 @@ def apply_gng_packages(packages: list[Path], install_root: Path):
                         shutil.copy2(file, target)
 
                     break
+
+        if new_airac_cycle:
+            write_current_airac_cycle(install_root, new_airac_cycle)
 
     remove_duplicate_copyright_files(install_root)
 
@@ -247,10 +334,64 @@ def normalize_sectors(install_root: Path):
             file.rename(target)
 
 
+def lfxx_settings_backup_exists(install_root: Path) -> bool:
+    backup_root = install_root / "LFXX" / "Settings_Backups"
+    return backup_root.exists() and any(backup_root.iterdir())
+
+
+def backup_lfxx_settings(install_root: Path):
+    settings_dir = install_root / "LFXX" / "Settings"
+
+    if not settings_dir.exists():
+        return
+
+    backup_dir = (
+        install_root
+        / "LFXX"
+        / "Settings_Backups"
+        / datetime.now().strftime("%Y%m%d_%H%M%S")
+    )
+
+    shutil.copytree(settings_dir, backup_dir)
+
+
+def lfxx_settings_would_change(repo_root: Path, install_root: Path) -> bool:
+    repo_settings = repo_root / "LFXX" / "Settings"
+    installed_settings = install_root / "LFXX" / "Settings"
+
+    if not repo_settings.exists():
+        return False
+
+    if not installed_settings.exists():
+        return True
+
+    repo_files = {
+        file.relative_to(repo_settings)
+        for file in repo_settings.rglob("*")
+        if file.is_file()
+    }
+
+    installed_files = {
+        file.relative_to(installed_settings)
+        for file in installed_settings.rglob("*")
+        if file.is_file()
+    }
+
+    if repo_files != installed_files:
+        return True
+
+    for rel in repo_files:
+        if not filecmp.cmp(repo_settings / rel, installed_settings / rel, shallow=False):
+            return True
+
+    return False
+
+
 def cleanup_legacy_root_files(install_root: Path):
     allowed_root_files = {
         "aeronav_copyright.txt",
         "ProfileConfigurator.exe",
+        "Installer.exe",
     }
 
     for item in install_root.iterdir():
@@ -281,9 +422,17 @@ def cleanup_install(install_root: Path):
 def update_controller_pack(
     install_root: Path,
     gng_packages: list[Path] | None = None,
+    backup_settings_callback=None,
 ):
     github_version = get_github_version()
     repo_root = download_github_repo()
+
+    if (
+        lfxx_settings_would_change(repo_root, install_root)
+        and not lfxx_settings_backup_exists(install_root)
+    ):
+        if backup_settings_callback and backup_settings_callback():
+            backup_lfxx_settings(install_root)
 
     apply_repo_layout(repo_root, install_root)
 

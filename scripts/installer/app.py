@@ -27,6 +27,7 @@ def resource_path(relative_path: str) -> Path:
 def get_start_directory() -> Path:
     if getattr(sys, "frozen", False):
         return Path(sys.executable).resolve().parent
+
     return Path.cwd()
 
 
@@ -131,6 +132,7 @@ class InstallerApp:
 
     def auto_detect_start_directory(self):
         start_dir = get_start_directory()
+
         if looks_like_controller_pack(start_dir):
             self.install_dir.set(str(start_dir))
 
@@ -166,8 +168,10 @@ class InstallerApp:
 
         if self.github_version in ["Unknown", "Unable to check"]:
             self.action_button.config(bg=GRAY)
+
         elif self.update_available:
             self.action_button.config(bg=AMBER)
+
         else:
             self.action_button.config(bg=GREEN)
 
@@ -195,12 +199,16 @@ class InstallerApp:
 
         if self.local_version == "Not installed":
             status = "Not installed"
+
         elif self.github_version == "Unable to check":
             status = "Could not check GitHub"
+
         elif self.update_available:
             status = "Update available"
+
         elif self.local_version == self.github_version:
             status = "Up to date"
+
         else:
             status = "Ready"
 
@@ -231,6 +239,14 @@ class InstallerApp:
         self.gng_packages = [Path(file) for file in files]
         self.refresh_action_button()
 
+    def ask_backup_settings(self) -> bool:
+        return messagebox.askyesno(
+            "Backup LFXX settings?",
+            "The update will modify files in LFXX/Settings.\n\n"
+            "A settings backup has not been found yet.\n\n"
+            "Do you want to back up your current LFXX/Settings folder before continuing?"
+        )
+
     def run_update(self):
         if not self.install_dir.get():
             messagebox.showerror(
@@ -249,6 +265,7 @@ class InstallerApp:
             update_controller_pack(
                 install_root=install_root,
                 gng_packages=self.gng_packages,
+                backup_settings_callback=self.ask_backup_settings,
             )
 
             self.refresh_versions()
