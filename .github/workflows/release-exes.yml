@@ -39,9 +39,10 @@ jobs:
           pip install -r requirements.txt
           pyinstaller --onefile --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
 
-      - name: Upload release assets
+      - name: Upload release assets and generate notes
         uses: softprops/action-gh-release@v2
         with:
+          generate_release_notes: true
           files: |
             scripts/installer/dist/Installer.exe
             scripts/profileconfigurator/dist/ProfileConfigurator.exe
