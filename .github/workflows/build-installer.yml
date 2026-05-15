@@ -4,8 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  release:
-    types: [created]
 
 jobs:
   build-windows:
@@ -16,14 +14,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
       - name: Write build info
         shell: pwsh
         run: |
-          Set-Content -Path "scripts/installer/build_info.py" -Value "BUILD_COMMIT = '${{ github.sha }}'.strip()[:7]"
+          $shortSha = "${{ github.sha }}".Substring(0, 7)
+          Set-Content -Path "scripts/installer/build_info.py" -Value "BUILD_COMMIT = '$shortSha'"
           Add-Content -Path "scripts/installer/build_info.py" -Value "BUILD_BRANCH = '${{ github.ref_name }}'"
 
       - name: Install dependencies
@@ -40,5 +39,5 @@ jobs:
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CoFrance-Installer-${{ github.sha }}
+          name: CoFrance-Installer
           path: scripts/installer/dist/CoFrance Installer.exe
