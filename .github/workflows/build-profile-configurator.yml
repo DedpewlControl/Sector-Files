@@ -22,17 +22,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build Profile Configurator folder
+      - name: Build Profile Configurator EXE
         working-directory: scripts/profileconfigurator
         run: |
-          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
-
-      - name: Zip Profile Configurator
-        shell: pwsh
-        run: |
-          Compress-Archive -Path "scripts/profileconfigurator/dist/ProfileConfigurator/*" -DestinationPath "ProfileConfigurator.zip"
+          pyinstaller --onefile --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
 
       - uses: actions/upload-artifact@v4
         with:
           name: ProfileConfigurator
-          path: ProfileConfigurator.zip
+          path: scripts/profileconfigurator/dist/ProfileConfigurator.exe

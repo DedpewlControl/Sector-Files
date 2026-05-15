@@ -30,24 +30,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "Installer" app.py
+          pyinstaller --onefile --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "Installer" app.py
 
       - name: Build Profile Configurator
         working-directory: scripts/profileconfigurator
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pyinstaller --onedir --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
-
-      - name: Zip release assets
-        shell: pwsh
-        run: |
-          Compress-Archive -Path "scripts/installer/dist/Installer/*" -DestinationPath "Installer.zip"
-          Compress-Archive -Path "scripts/profileconfigurator/dist/ProfileConfigurator/*" -DestinationPath "ProfileConfigurator.zip"
+          pyinstaller --onefile --noupx --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --version-file version_info.txt --name "ProfileConfigurator" ProfileConfigurator.py
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            Installer.zip
-            ProfileConfigurator.zip
+            scripts/installer/dist/Installer.exe
+            scripts/profileconfigurator/dist/ProfileConfigurator.exe
