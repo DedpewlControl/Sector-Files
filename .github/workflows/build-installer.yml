@@ -10,11 +10,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -31,13 +29,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build EXE
+      - name: Build Installer EXE
         working-directory: scripts/installer
         run: |
-          pyinstaller --onefile --windowed --name "CoFrance Installer" app.py
+          pyinstaller --onefile --windowed --icon ProfileConfigurator.ico --add-data "ProfileConfigurator.ico;." --name "Installer" app.py
 
-      - name: Upload EXE artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: CoFrance-Installer
-          path: scripts/installer/dist/CoFrance Installer.exe
+          name: Installer
+          path: scripts/installer/dist/Installer.exe

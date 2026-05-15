@@ -20,6 +20,11 @@ from config import (
 
 COPYRIGHT_FILE = "aeronav_copyright.txt"
 
+try:
+    from build_info import BUILD_COMMIT
+except Exception:
+    BUILD_COMMIT = "dev"
+
 
 def matches(path: Path, patterns: list[str]) -> bool:
     normalized = path.as_posix()
